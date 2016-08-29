@@ -14,10 +14,28 @@ const SERVO = new Set(['background-color', 'background-image', 'background-posit
 // obtained by iterating through getcomputedstyle
 const FIREFOX = new Set(["align-content","align-items","align-self","animation-delay","animation-direction","animation-duration","animation-fill-mode","animation-iteration-count","animation-name","animation-play-state","animation-timing-function","backface-visibility","background-attachment","background-blend-mode","background-clip","background-color","background-image","background-origin","background-position","background-position-x","background-position-y","background-repeat","background-size","border-bottom-color","border-bottom-left-radius","border-bottom-right-radius","border-bottom-style","border-bottom-width","border-collapse","border-image-outset","border-image-repeat","border-image-slice","border-image-source","border-image-width","border-left-color","border-left-style","border-left-width","border-right-color","border-right-style","border-right-width","border-spacing","border-top-color","border-top-left-radius","border-top-right-radius","border-top-style","border-top-width","bottom","box-decoration-break","box-shadow","box-sizing","caption-side","clear","clip","color","color-adjust","content","counter-increment","counter-reset","cursor","direction","display","empty-cells","flex-basis","flex-direction","flex-grow","flex-shrink","flex-wrap","float","font-family","font-feature-settings","font-kerning","font-language-override","font-size","font-size-adjust","font-stretch","font-style","font-synthesis","font-variant","font-variant-alternates","font-variant-caps","font-variant-east-asian","font-variant-ligatures","font-variant-numeric","font-variant-position","font-weight","grid-auto-columns","grid-auto-flow","grid-auto-rows","grid-column-end","grid-column-gap","grid-column-start","grid-row-end","grid-row-gap","grid-row-start","grid-template-areas","grid-template-columns","grid-template-rows","height","hyphens","image-orientation","ime-mode","isolation","justify-content","justify-items","justify-self","left","letter-spacing","line-height","list-style-image","list-style-position","list-style-type","margin-bottom","margin-left","margin-right","margin-top","marker-offset","max-height","max-width","min-height","min-width","mix-blend-mode","object-fit","object-position","opacity","order","outline-color","outline-offset","outline-style","outline-width","overflow","overflow-wrap","overflow-x","overflow-y","padding-bottom","padding-left","padding-right","padding-top","page-break-after","page-break-before","page-break-inside","perspective","perspective-origin","pointer-events","position","quotes","resize","right","ruby-align","ruby-position","scroll-behavior","scroll-snap-coordinate","scroll-snap-destination","scroll-snap-points-x","scroll-snap-points-y","scroll-snap-type-x","scroll-snap-type-y","table-layout","text-align","text-align-last","text-combine-upright","text-decoration","text-decoration-color","text-decoration-line","text-decoration-style","text-emphasis-color","text-emphasis-position","text-emphasis-style","text-indent","text-orientation","text-overflow","text-shadow","text-transform","top","transform","transform-box","transform-origin","transform-style","transition-delay","transition-duration","transition-property","transition-timing-function","unicode-bidi","vertical-align","visibility","white-space","width","will-change","word-break","word-spacing","writing-mode","z-index","-moz-appearance","-moz-binding","-moz-border-bottom-colors","-moz-border-left-colors","-moz-border-right-colors","-moz-border-top-colors","-moz-box-align","-moz-box-direction","-moz-box-flex","-moz-box-ordinal-group","-moz-box-orient","-moz-box-pack","-moz-column-count","-moz-column-fill","-moz-column-gap","-moz-column-rule-color","-moz-column-rule-style","-moz-column-rule-width","-moz-column-width","-moz-float-edge","-moz-force-broken-image-icon","-moz-image-region","-moz-orient","-moz-osx-font-smoothing","-moz-outline-radius-bottomleft","-moz-outline-radius-bottomright","-moz-outline-radius-topleft","-moz-outline-radius-topright","-moz-stack-sizing","-moz-tab-size","-moz-text-size-adjust","-moz-user-focus","-moz-user-input","-moz-user-modify","-moz-user-select","-moz-window-dragging","-webkit-text-fill-color","-webkit-text-stroke-color","-webkit-text-stroke-width","clip-path","clip-rule","color-interpolation","color-interpolation-filters","dominant-baseline","fill","fill-opacity","fill-rule","filter","flood-color","flood-opacity","image-rendering","lighting-color","marker-end","marker-mid","marker-start","mask","mask-type","paint-order","shape-rendering","stop-color","stop-opacity","stroke","stroke-dasharray","stroke-dashoffset","stroke-linecap","stroke-linejoin","stroke-miterlimit","stroke-opacity","stroke-width","text-anchor","text-rendering","vector-effect"]);
 const CHROME = new Set(["animation-delay","animation-direction","animation-duration","animation-fill-mode","animation-iteration-count","animation-name","animation-play-state","animation-timing-function","background-attachment","background-blend-mode","background-clip","background-color","background-image","background-origin","background-position","background-repeat","background-size","border-bottom-color","border-bottom-left-radius","border-bottom-right-radius","border-bottom-style","border-bottom-width","border-collapse","border-image-outset","border-image-repeat","border-image-slice","border-image-source","border-image-width","border-left-color","border-left-style","border-left-width","border-right-color","border-right-style","border-right-width","border-top-color","border-top-left-radius","border-top-right-radius","border-top-style","border-top-width","bottom","box-shadow","box-sizing","break-after","break-before","break-inside","caption-side","clear","clip","color","content","cursor","direction","display","empty-cells","float","font-family","font-kerning","font-size","font-stretch","font-style","font-variant","font-variant-ligatures","font-variant-caps","font-variant-numeric","font-weight","height","image-rendering","isolation","left","letter-spacing","line-height","list-style-image","list-style-position","list-style-type","margin-bottom","margin-left","margin-right","margin-top","max-height","max-width","min-height","min-width","mix-blend-mode","motion-offset","motion-path","motion-rotation","object-fit","object-position","opacity","orphans","outline-color","outline-offset","outline-style","outline-width","overflow-wrap","overflow-x","overflow-y","padding-bottom","padding-left","padding-right","padding-top","pointer-events","position","resize","right","speak","table-layout","tab-size","text-align","text-align-last","text-decoration","text-indent","text-rendering","text-shadow","text-overflow","text-transform","top","touch-action","transition-delay","transition-duration","transition-property","transition-timing-function","unicode-bidi","vertical-align","visibility","white-space","widows","width","will-change","word-break","word-spacing","word-wrap","z-index","zoom","-webkit-appearance","backface-visibility","-webkit-background-clip","-webkit-background-origin","-webkit-border-horizontal-spacing","-webkit-border-image","-webkit-border-vertical-spacing","-webkit-box-align","-webkit-box-decoration-break","-webkit-box-direction","-webkit-box-flex","-webkit-box-flex-group","-webkit-box-lines","-webkit-box-ordinal-group","-webkit-box-orient","-webkit-box-pack","-webkit-box-reflect","-webkit-clip-path","column-count","column-gap","column-rule-color","column-rule-style","column-rule-width","column-span","column-width","-webkit-filter","align-content","align-items","align-self","flex-basis","flex-grow","flex-shrink","flex-direction","flex-wrap","justify-content","-webkit-font-smoothing","-webkit-highlight","-webkit-hyphenate-character","-webkit-line-break","-webkit-line-clamp","-webkit-locale","-webkit-margin-before-collapse","-webkit-margin-after-collapse","-webkit-mask-box-image","-webkit-mask-box-image-outset","-webkit-mask-box-image-repeat","-webkit-mask-box-image-slice","-webkit-mask-box-image-source","-webkit-mask-box-image-width","-webkit-mask-clip","-webkit-mask-composite","-webkit-mask-image","-webkit-mask-origin","-webkit-mask-position","-webkit-mask-repeat","-webkit-mask-size","order","perspective","perspective-origin","-webkit-print-color-adjust","-webkit-rtl-ordering","shape-outside","shape-image-threshold","shape-margin","-webkit-tap-highlight-color","-webkit-text-combine","-webkit-text-decorations-in-effect","-webkit-text-emphasis-color","-webkit-text-emphasis-position","-webkit-text-emphasis-style","-webkit-text-fill-color","-webkit-text-orientation","-webkit-text-security","-webkit-text-stroke-color","-webkit-text-stroke-width","transform","transform-origin","transform-style","-webkit-user-drag","-webkit-user-modify","-webkit-user-select","-webkit-writing-mode","-webkit-app-region","buffered-rendering","clip-path","clip-rule","mask","filter","flood-color","flood-opacity","lighting-color","stop-color","stop-opacity","color-interpolation","color-interpolation-filters","color-rendering","fill","fill-opacity","fill-rule","marker-end","marker-mid","marker-start","mask-type","shape-rendering","stroke","stroke-dasharray","stroke-dashoffset","stroke-linecap","stroke-linejoin","stroke-miterlimit","stroke-opacity","stroke-width","alignment-baseline","baseline-shift","dominant-baseline","text-anchor","writing-mode","vector-effect","paint-order","d","cx","cy","x","y","r","rx","ry"]);
+
+// Run on the first section of http://mcc.id.au/temp/topsites-stylo-properties.txt
+// cat alexa | sed "s/:.*//" | sed "s/(\(.*\))/\1/" | gsort --key 2,2 --key 1n,1n | tail -r | uniq -f 1 | awk '{print "\""$2"\": "$1"," }'| tr '\n' ' '
+// (not entirely accurate, but close)
+const ALEXA_COUNT = {"writing-mode": 1, "word-spacing": 9, "will-change": 8, "width": 10, "white-space": 13, "vertical-align": 29, "transition-property": 203, "transform": 1, "touch-action": 31, "text-overflow": 3, "text-emphasis-position": 23, "text-decoration-line": 1, "text-decoration-color": 480, "text-align-last": 2, "text-align": 34, "stroke-width": 15, "stroke-dashoffset": 3, "stroke-dasharray": 2, "stroke": 17, "pointer-events": 9, "overflow-y": 91, "overflow-x": 91, "overflow-clip-box": 394, "outline-color": 340, "min-width": 4, "min-height": 6, "max-width": 1, "mask": 2, "list-style-type": 1, "letter-spacing": 66, "justify-content": 39, "image-rendering": 2, "font-weight": 413, "font-variant-position": 413, "font-variant-numeric": 417, "font-variant-ligatures": 413, "font-variant-east-asian": 413, "font-variant-caps": 413, "font-variant-alternates": 413, "font-synthesis": 413, "font-style": 413, "font-stretch": 413, "font-size-adjust": 413, "font-size": 413, "font-language-override": 413, "font-kerning": 413, "font-feature-settings": 448, "font-family": 1, "flex-wrap": 45, "flex-shrink": 71, "flex-grow": 77, "flex-direction": 40, "filter": 2, "fill": 62, "display": 108, "cursor": 2, "content": 64, "color": 394, "clip-path": 3, "border-top-color": 501, "border-right-color": 501, "border-left-color": 501, "border-image-width": 501, "border-image-source": 501, "border-image-slice": 501, "border-image-repeat": 501, "border-image-outset": 501, "border-bottom-color": 501, "background-position-y": 501, "background-position-x": 501, "background-image": 56, "background-color": 501, "background-blend-mode": 2, "animation-name": 4, "align-self": 6, "align-items": 49, "align-content": 7, "-x-text-zoom": 4, "-x-system-font": 390, "-x-lang": 304, "-webkit-text-stroke-width": 5, "-webkit-text-stroke-color": 1, "-webkit-text-fill-color": 2, "-moz-window-dragging": 2, "-moz-user-select": 4, "-moz-text-size-adjust": 45, "-moz-tab-size": 1, "-moz-force-broken-image-icon": 2, "-moz-control-character-visibility": 387, "-moz-column-width": 4, "-moz-column-rule-width": 1, "-moz-column-rule-style": 1, "-moz-column-rule-color": 9, "-moz-column-gap": 5, "-moz-column-fill": 1, "-moz-column-count": 13, "-moz-box-pack": 21, "-moz-box-orient": 58, "-moz-box-ordinal-group": 13, "-moz-box-direction": 25, "-moz-border-top-colors": 501, "-moz-border-right-colors": 501, "-moz-border-left-colors": 501, "-moz-border-bottom-colors": 501, "-moz-appearance": 501};
+
 function displaySelector(selector, display) {
     for (let row of document.querySelectorAll(selector)) {
         row.style.display = display;
     }
+}
+function setNumbers(id, all, alexa, unprefixed) {
+    let tr = document.getElementById(id);
+    tr.childNodes[1].innerHTML = all;
+    tr.childNodes[2].innerHTML = alexa;
+    tr.childNodes[3].innerHTML = unprefixed;
+}
+function setNumbersFor(id, selector) {
+    setNumbers(id,
+               document.querySelectorAll('.property-row'+selector).length,
+               document.querySelectorAll('.used-in-alexa.property-row'+ selector).length,
+               document.querySelectorAll('.property-row'+selector+':not(.prefixed)').length);
 }
 function hideRows() {
     let boxes = ['stylo', 'servo', 'firefox', 'chrome'];
@@ -44,6 +62,13 @@ function hideRows() {
     if (selections['mdn'].checked) {
         displaySelector('tr.property-row:not(.hasMDN)', 'none');
     }
+    if (selections['alexa'].checked) {
+        displaySelector('tr.property-row:not(.used-in-alexa)', 'none');
+    }
+    setNumbers('currently-visible',
+               [...document.getElementsByClassName('property-row')].filter((x) => x.style.display != "none").length,
+               [...document.querySelectorAll('.property-row.used-in-alexa')].filter((x) => x.style.display != "none").length,
+               [...document.querySelectorAll('.property-row:not(.prefixed)')].filter((x) => x.style.display != "none").length);
 }
 </script>
 <style type="text/css">
@@ -53,9 +78,14 @@ function hideRows() {
     .no-cell {
         background-color: rgba(255, 0, 0, 0.4);
     }
+    #topbox {
+        display: flex;
+        justify-content: space-between;
+    }
 </style>
 </head>
 <body>
+<div id=topbox>
 <form id=selections>
     Stylo:&nbsp;&nbsp;&nbsp;
     <input type="radio" name="stylo" id=stylo-show value=show checked><label for=stylo-show>Show</label>&nbsp;&nbsp;&nbsp;
@@ -80,13 +110,31 @@ function hideRows() {
     <label for="no-prefix">Hide prefixes</label><input type="checkbox" name="no-prefix" checked id="no-prefix">
     <br>
     <label for="mdn">Hide properties without MDN pages</label><input type="checkbox" name="mdn" checked id="mdn">
+    <br>
+    <label for="alexa">Hide properties not used in Alexa top 500</label><input type="checkbox" name="alexa" id="alexa">
 </form>
+<table>
+    <thead>
+        <tr><th>Implemented in</th><th>All properties</th><th>Alexa top 500</th><th>Without prefixes</th></tr>
+    </thead>
+    <tbody>
+        <tr id="stylo-implemented"><td>Stylo</td><td></td><td></td><td></td></tr>
+        <tr id="servo-implemented"><td>Servo</td><td></td><td></td><td></td></tr>
+        <tr id="firefox-implemented"><td>Firefox</td><td></td><td></td><td></td></tr>
+        <tr id="stylo-but-not-servo"><td>Stylo but not Servo</td><td></td><td></td><td></td></tr>
+        <tr id="servo-but-not-stylo"><td>Servo but not Stylo</td><td></td><td></td><td></td></tr>
+        <tr id="firefox-but-not-stylo"><td>Firefox but not Stylo</td><td></td><td></td><td></td></tr>
+        <tr id="firefox-but-not-servo"><td>Firefox but not Servo</td><td></td><td></td><td></td></tr>
+        <tr id="currently-visible"><td>Currently visible</td><td></td><td></td><td></td></tr>
+    </tbody>
+</table>
+</div>
 <br>
 Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/Template:cssdata">this template</a>
 <br><br>
 <table>
 <thead>
-    <tr><th>Property</th><th>In Stylo?</th><th>In Servo?</th><th>In Firefox?</th><th>In Chrome?</th><th>Syntax</th></tr>
+    <tr><th>Property</th><th>In Stylo?</th><th>In Servo?</th><th>In Firefox?</th><th>In Chrome?</th><th>Alexa count</th><th>Syntax</th></tr>
 </thead>
 <tbody id=properties></tbody>
 </table>
@@ -115,6 +163,9 @@ Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/T
         if (prop.charAt(0) == '-') {
             row.className += " prefixed";
         }
+        if (prop in ALEXA_COUNT) {
+            row.className += " used-in-alexa";
+        }
         let name_cell = document.createElement('td');
         let name_code = document.createElement('code');
         name_code.textContent = prop;
@@ -142,6 +193,10 @@ Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/T
         addCell(SERVO.has(prop));
         addCell(FIREFOX.has(prop));
         addCell(CHROME.has(prop));
+
+        let alexa_cell = document.createElement('td');
+        alexa_cell.innerHTML = ALEXA_COUNT[prop] || "";
+        row.appendChild(alexa_cell)
 
         // function escape(text) {
         //     let escape = document.createElement('textarea');
@@ -176,6 +231,13 @@ Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/T
 
         table.appendChild(row);
     }
+    setNumbersFor('stylo-implemented', '.in-stylo');
+    setNumbersFor('servo-implemented', '.in-servo');
+    setNumbersFor('firefox-implemented', '.in-firefox');
+    setNumbersFor('stylo-but-not-servo', '.in-stylo:not(.in-servo)');
+    setNumbersFor('servo-but-not-stylo', '.in-servo:not(.in-stylo)');
+    setNumbersFor('firefox-but-not-servo', '.in-firefox:not(.in-servo)');
+    setNumbersFor('firefox-but-not-stylo', '.in-firefox:not(.in-stylo)');
     hideRows();
 </script>
 </body>
