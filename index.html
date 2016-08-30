@@ -40,12 +40,7 @@ function setNumbersFor(id, selector) {
 function hideRows() {
     let boxes = ['stylo', 'servo', 'firefox', 'chrome'];
     let selections = document.getElementById('selections');
-    displaySelector('tr.property-row', 'none');
-    for (let box of boxes) {
-        if (selections[box].value == "show") {
-            displaySelector(`tr.property-row.in-${box}`, 'table-row');
-        }
-    }
+    displaySelector('tr.property-row', 'table-row');
     for (let box of boxes) {
         if (selections[box].value == "hide") {
             displaySelector(`tr.property-row.in-${box}`, 'none');
