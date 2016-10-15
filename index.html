@@ -26,24 +26,22 @@ let CHROME = new Set(["align-content","align-items","align-self","alignment-base
 // (not entirely accurate, but close)
 const ALEXA_COUNT = {"writing-mode": 1, "word-spacing": 9, "will-change": 8, "width": 10, "white-space": 13, "vertical-align": 29, "transition-property": 203, "transform": 1, "touch-action": 31, "text-overflow": 3, "text-emphasis-position": 23, "text-decoration-line": 1, "text-decoration-color": 480, "text-align-last": 2, "text-align": 34, "stroke-width": 15, "stroke-dashoffset": 3, "stroke-dasharray": 2, "stroke": 17, "pointer-events": 9, "overflow-y": 91, "overflow-x": 91, "overflow-clip-box": 394, "outline-color": 340, "min-width": 4, "min-height": 6, "max-width": 1, "mask": 2, "list-style-type": 1, "letter-spacing": 66, "justify-content": 39, "image-rendering": 2, "font-weight": 413, "font-variant-position": 413, "font-variant-numeric": 417, "font-variant-ligatures": 413, "font-variant-east-asian": 413, "font-variant-caps": 413, "font-variant-alternates": 413, "font-synthesis": 413, "font-style": 413, "font-stretch": 413, "font-size-adjust": 413, "font-size": 413, "font-language-override": 413, "font-kerning": 413, "font-feature-settings": 448, "font-family": 1, "flex-wrap": 45, "flex-shrink": 71, "flex-grow": 77, "flex-direction": 40, "filter": 2, "fill": 62, "display": 108, "cursor": 2, "content": 64, "color": 394, "clip-path": 3, "border-top-color": 501, "border-right-color": 501, "border-left-color": 501, "border-image-width": 501, "border-image-source": 501, "border-image-slice": 501, "border-image-repeat": 501, "border-image-outset": 501, "border-bottom-color": 501, "background-position-y": 501, "background-position-x": 501, "background-image": 56, "background-color": 501, "background-blend-mode": 2, "animation-name": 4, "align-self": 6, "align-items": 49, "align-content": 7, "-x-text-zoom": 4, "-x-system-font": 390, "-x-lang": 304, "-webkit-text-stroke-width": 5, "-webkit-text-stroke-color": 1, "-webkit-text-fill-color": 2, "-moz-window-dragging": 2, "-moz-user-select": 4, "-moz-text-size-adjust": 45, "-moz-tab-size": 1, "-moz-force-broken-image-icon": 2, "-moz-control-character-visibility": 387, "-moz-column-width": 4, "-moz-column-rule-width": 1, "-moz-column-rule-style": 1, "-moz-column-rule-color": 9, "-moz-column-gap": 5, "-moz-column-fill": 1, "-moz-column-count": 13, "-moz-box-pack": 21, "-moz-box-orient": 58, "-moz-box-ordinal-group": 13, "-moz-box-direction": 25, "-moz-border-top-colors": 501, "-moz-border-right-colors": 501, "-moz-border-left-colors": 501, "-moz-border-bottom-colors": 501, "-moz-appearance": 501};
 
-const PROPS = new Set([...FIREFOX, ...CHROME, ...Object.getOwnPropertyNames(VALUES), ...Object.getOwnPropertyNames(ALEXA_COUNT)]);
+const INITIAL_PROPS = new Set([...FIREFOX, ...CHROME, ...Object.getOwnPropertyNames(VALUES), ...Object.getOwnPropertyNames(ALEXA_COUNT)]);
 
 function displaySelector(selector, display) {
     for (let row of document.querySelectorAll(selector)) {
         row.style.display = display;
     }
 }
-function setNumbers(id, all, alexa, unprefixed) {
+function setNumbers(id, all, alexa) {
     let tr = document.getElementById(id);
     tr.childNodes[1].innerHTML = all;
     tr.childNodes[2].innerHTML = alexa;
-    tr.childNodes[3].innerHTML = unprefixed;
 }
 function setNumbersFor(id, selector) {
     setNumbers(id,
                document.querySelectorAll('.property-row'+selector).length,
-               document.querySelectorAll('.used-in-alexa.property-row'+ selector).length,
-               document.querySelectorAll('.property-row'+selector+':not(.prefixed)').length);
+               document.querySelectorAll('.used-in-alexa.property-row'+ selector).length);
 }
 function hideRows() {
     let boxes = ['stylo', 'servo', 'firefox', 'chrome'];
@@ -59,9 +57,6 @@ function hideRows() {
             displaySelector(`tr.property-row:not(.in-${box})`, 'none');
         }
     }
-    if (selections['no-prefix'].checked) {
-        displaySelector('tr.property-row.prefixed', 'none');
-    }
     if (selections['mdn'].checked) {
         displaySelector('tr.property-row:not(.hasMDN)', 'none');
     }
@@ -70,13 +65,15 @@ function hideRows() {
     }
     setNumbers('currently-visible',
                [...document.getElementsByClassName('property-row')].filter((x) => x.style.display != "none").length,
-               [...document.querySelectorAll('.property-row.used-in-alexa')].filter((x) => x.style.display != "none").length,
-               [...document.querySelectorAll('.property-row:not(.prefixed)')].filter((x) => x.style.display != "none").length);
+               [...document.querySelectorAll('.property-row.used-in-alexa')].filter((x) => x.style.display != "none").length);
 }
 </script>
 <style type="text/css">
     .yes-cell {
-        background-color: rgba(0, 255, 0, 0.4);
+        background-color: rgba(0, 255, 0, 0.2);
+    }
+    .yes-cell.unprefixed {
+        background-color: rgba(0, 255, 0, 0.5);
     }
     .no-cell {
         background-color: rgba(255, 0, 0, 0.4);
@@ -85,52 +82,91 @@ function hideRows() {
         display: flex;
         justify-content: space-between;
     }
+
+    .webkit-prefixed {
+        background-image: linear-gradient(#498AF4, #498AF4);
+        background-size: 10px 10px;
+        background-position: top right;
+        background-repeat: no-repeat;
+    }
+    .moz-prefixed {
+        background-image: linear-gradient(#FCA604, #FCA604);
+        background-size: 10px 10px;
+        background-position: bottom right;
+        background-repeat: no-repeat;
+    }
+    .moz-prefixed.webkit-prefixed {
+        background-image: linear-gradient(#498AF4, #498AF4),linear-gradient(#FCA604, #FCA604);
+        background-size: 10px 10px;
+        background-position: top right,bottom right;
+        background-repeat: no-repeat;
+    }
+
+    #key span {
+        height: 10px;
+        width: 10px;
+        display: inline-block;
+    }
+    #key {
+        list-style-type: none
+    }
+    .property-row td:nth-child(7) code {
+        overflow-x: scroll;
+    }
 </style>
 </head>
 <body>
 <div id=topbox>
-<form id=selections>
-    Stylo:&nbsp;&nbsp;&nbsp;
-    <input type="radio" name="stylo" id=stylo-show value=show checked><label for=stylo-show>Show</label>&nbsp;&nbsp;&nbsp;
-    <input type="radio" name="stylo" id=stylo-hide value=hide><label for=stylo-hide>Hide implemented</label>&nbsp;&nbsp;&nbsp;
-    <input type="radio" name="stylo" id=stylo-only value=only><label for=stylo-only>Only implemented</label>
-    <br>
-    Servo:&nbsp;&nbsp;&nbsp;
-    <input type="radio" name="servo" id=servo-show value=show checked><label for=servo-show>Show</label>&nbsp;&nbsp;&nbsp;
-    <input type="radio" name="servo" id=servo-hide value=hide><label for=servo-hide>Hide implemented</label>&nbsp;&nbsp;&nbsp;
-    <input type="radio" name="servo" id=servo-only value=only><label for=servo-only>Only implemented</label>
-    <br>
-    Firefox:&nbsp;&nbsp;&nbsp;
-    <input type="radio" name="firefox" id=fx-show value=show checked><label for=fx-show>Show</label>&nbsp;&nbsp;&nbsp;
-    <input type="radio" name="firefox" id=fx-hide value=hide><label for=fx-hide>Hide implemented</label>&nbsp;&nbsp;&nbsp;
-    <input type="radio" name="firefox" id=fx-only value=only><label for=fx-only>Only implemented</label>
-    <br>
-    Chrome:&nbsp;&nbsp;&nbsp;
-    <input type="radio" name="chrome" id=chrome-show value=show checked><label for=chrome-show>Show</label>&nbsp;&nbsp;&nbsp;
-    <input type="radio" name="chrome" id=chrome-hide value=hide><label for=chrome-hide>Hide implemented</label>&nbsp;&nbsp;&nbsp;
-    <input type="radio" name="chrome" id=chrome-only value=only><label for=chrome-only>Only implemented</label>
-    <br>
-    <label for="no-prefix">Hide prefixes</label><input type="checkbox" name="no-prefix" checked id="no-prefix">
-    <br>
-    <label for="mdn">Hide properties without MDN pages</label><input type="checkbox" name="mdn" checked id="mdn">
-    <br>
-    <label for="alexa">Hide properties not used in Alexa top 500</label><input type="checkbox" name="alexa" id="alexa">
-</form>
-<table>
-    <thead>
-        <tr><th>Implemented in</th><th>All properties</th><th>Alexa top 500</th><th>Without prefixes</th></tr>
-    </thead>
-    <tbody>
-        <tr id="stylo-implemented"><td>Stylo</td><td></td><td></td><td></td></tr>
-        <tr id="servo-implemented"><td>Servo</td><td></td><td></td><td></td></tr>
-        <tr id="firefox-implemented"><td>Firefox</td><td></td><td></td><td></td></tr>
-        <tr id="stylo-but-not-servo"><td>Stylo but not Servo</td><td></td><td></td><td></td></tr>
-        <tr id="servo-but-not-stylo"><td>Servo but not Stylo</td><td></td><td></td><td></td></tr>
-        <tr id="firefox-but-not-stylo"><td>Firefox but not Stylo</td><td></td><td></td><td></td></tr>
-        <tr id="firefox-but-not-servo"><td>Firefox but not Servo</td><td></td><td></td><td></td></tr>
-        <tr id="currently-visible"><td>Currently visible</td><td></td><td></td><td></td></tr>
-    </tbody>
-</table>
+    <form id=selections>
+        Stylo:&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="stylo" id=stylo-show value=show checked><label for=stylo-show>Show</label>&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="stylo" id=stylo-hide value=hide><label for=stylo-hide>Hide implemented</label>&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="stylo" id=stylo-only value=only><label for=stylo-only>Only implemented</label>
+        <br>
+        Servo:&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="servo" id=servo-show value=show checked><label for=servo-show>Show</label>&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="servo" id=servo-hide value=hide><label for=servo-hide>Hide implemented</label>&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="servo" id=servo-only value=only><label for=servo-only>Only implemented</label>
+        <br>
+        Firefox:&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="firefox" id=fx-show value=show checked><label for=fx-show>Show</label>&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="firefox" id=fx-hide value=hide><label for=fx-hide>Hide implemented</label>&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="firefox" id=fx-only value=only><label for=fx-only>Only implemented</label>
+        <br>
+        Chrome:&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="chrome" id=chrome-show value=show checked><label for=chrome-show>Show</label>&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="chrome" id=chrome-hide value=hide><label for=chrome-hide>Hide implemented</label>&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="chrome" id=chrome-only value=only><label for=chrome-only>Only implemented</label>
+        <br><br>
+        <label for="mdn">Hide properties without MDN pages</label><input type="checkbox" name="mdn" checked id="mdn">
+        <br>
+        <label for="alexa">Hide properties not used in Alexa top 500</label><input type="checkbox" name="alexa" id="alexa">
+        
+    </form>
+    <div>
+            Key:<ul id=key>
+            <li> <span style="background-color:#FCA604"></span> Exists in <code>-moz</code>-prefixed form</li>
+            <li> <span style="background-color:#498AF4"></span> Exists in <code>-webkit</code>-prefixed form</li>
+            <li> <span style="background-color:rgba(0, 255, 0, 0.2)"></span> Only implemented in prefixed form</li>
+            <li> <span style="background-color:rgba(0, 255, 0, 0.4)"></span> Exists in unprefixed form</li>
+            <li> <span style="background-color: rgba(255, 0, 0, 0.4)"></span> Unimplemented</li>
+        </ul>
+    </div>
+    <table>
+        <thead>
+            <tr><th>Implemented in</th><th>All properties</th><th>Alexa top 500</th></tr>
+        </thead>
+        <tbody>
+            <tr id="stylo-implemented"><td>Stylo</td><td></td><td></td></tr>
+            <tr id="servo-implemented"><td>Servo</td><td></td><td></td></tr>
+            <tr id="firefox-implemented"><td>Firefox</td><td></td><td></td></tr>
+            <tr id="stylo-but-not-servo"><td>Stylo but not Servo</td><td></td><td></td></tr>
+            <tr id="servo-but-not-stylo"><td>Servo but not Stylo</td><td></td><td></td></tr>
+            <tr id="firefox-but-not-stylo"><td>Firefox but not Stylo</td><td></td><td></td></tr>
+            <tr id="firefox-but-not-servo"><td>Firefox but not Servo</td><td></td><td></td></tr>
+            <tr id="currently-visible"><td>Currently visible</td><td></td><td></td></tr>
+        </tbody>
+    </table>
 </div>
 <br>
 Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/Template:cssdata">this template</a>
@@ -147,25 +183,25 @@ Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/T
     }
 
     let table = document.getElementById('properties');
+    foundPrefixes = [];
+    PROPS = INITIAL_PROPS;
+    for (prop of PROPS) {
+        if (prop.startsWith('-')) {
+            foundPrefixes.push(prop);
+            PROPS.delete(prop);
+        }
+    }
+    for (i of foundPrefixes) {
+        prop = i.split(/-[a-z]+-/)[1];
+        if (!PROPS.has(prop)) {
+            PROPS.add(prop);
+        }
+    }
+    PROPS = new Set([...PROPS].sort());
     for (prop of PROPS) {
         let row = document.createElement('tr');
-        let value = VALUES[prop] || {"url": "", "syntax": ""};
+        let value = VALUES[prop] || VALUES["-moz-"+prop] || VALUES["-webkit-"+prop] || {"url": "", "syntax": ""};
         row.className = "property-row";
-        if (FIREFOX.has(prop)) {
-            row.className += ' in-firefox';
-        }
-        if (CHROME.has(prop)) {
-            row.className += ' in-chrome';
-        }
-        if (STYLO.has(prop)) {
-            row.className += ' in-stylo';
-        }
-        if (SERVO.has(prop)) {
-            row.className += ' in-servo';
-        }
-        if (prop.charAt(0) == '-') {
-            row.className += " prefixed";
-        }
         if (prop in ALEXA_COUNT) {
             row.className += " used-in-alexa";
         }
@@ -185,17 +221,45 @@ Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/T
 
 
         row.appendChild(name_cell);
-        function addCell(isTrue) {
+        function addCell(set, prop, classname) {
+            let has = false;
+            let unprefixed = false;
+            let moz = false;
+            let webkit = false;
+            if (set.has(prop)) {
+                has = true;
+                unprefixed = true;
+            }
+            if (set.has("-moz-"+ prop)) {
+                has = true;
+                moz = true;
+            }
+            if (set.has("-webkit-"+ prop)) {
+                has = true;
+                webkit = true;
+            }
             let cell = document.createElement('td');
-            cell.innerHTML = isTrue?"yes":"no";
-            cell.className = isTrue?"yes-cell":"no-cell";
+            cell.innerHTML = has?"yes":"no";
+            cell.className = has?"yes-cell":"no-cell";
+            if (webkit) {
+                cell.className += " webkit-prefixed";
+            }
+            if (moz) {
+                cell.className += " moz-prefixed";
+            }
+            if (unprefixed) {
+                cell.className += " unprefixed";
+            }
+            if (has) {
+                row.className += " " + classname;
+            }
             row.appendChild(cell);
         }
 
-        addCell(STYLO.has(prop));
-        addCell(SERVO.has(prop));
-        addCell(FIREFOX.has(prop));
-        addCell(CHROME.has(prop));
+        addCell(STYLO, prop, "in-stylo");
+        addCell(SERVO, prop, "in-servo");
+        addCell(FIREFOX, prop, "in-firefox");
+        addCell(CHROME, prop, "in-chrome");
 
         let alexa_cell = document.createElement('td');
         alexa_cell.innerHTML = ALEXA_COUNT[prop] || "";
@@ -213,7 +277,18 @@ Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/T
             if (split.length == 1) {
                 let code = document.createElement('code');
                 code.textContent = syntax;
-                syntax_cell.appendChild(code);
+                if (syntax.length > 150) {
+                    let details = document.createElement('details');
+                    let summary = document.createElement('summary');
+                    let code = document.createElement('code');
+                    code.textContent = syntax;
+                    summary.textContent = "(click to show)";
+                    details.appendChild(summary);
+                    details.appendChild(code);
+                    syntax_cell.appendChild(details);
+                } else {
+                    syntax_cell.appendChild(code);
+                }
             } else {
                 let details = document.createElement('details');
                 let summary = document.createElement('summary');
