@@ -28,6 +28,20 @@ const ALEXA_COUNT = {"writing-mode": 1, "word-spacing": 9, "will-change": 8, "wi
 
 const INITIAL_PROPS = new Set([...FIREFOX, ...CHROME, ...Object.getOwnPropertyNames(VALUES), ...Object.getOwnPropertyNames(ALEXA_COUNT)]);
 
+const SERVO_BUGS = {
+    "text-stroke": ["https://github.com/servo/servo/issues/13849", true],
+    "text-emphasis-position": ["https://github.com/servo/servo/issues/13850", false],
+    "font-feature-settings": ["https://github.com/servo/servo/issues/13852", true],
+    "text-emphasis-style": ["https://github.com/servo/servo/issues/13853", true],
+    "scroll-snap-points-x": ["https://github.com/servo/servo/issues/13871", false],
+    "scroll-snap-points-y": ["https://github.com/servo/servo/issues/13871", false],
+};
+const STYLO_BUGS = Object.assign({
+    "column-rule-style": ["https://github.com/servo/servo/issues/13868", false],
+    "column-fill": ["https://github.com/servo/servo/issues/13871", true],
+}, SERVO_BUGS);
+
+const PARSE_PROPS = new Set([]);
 function displaySelector(selector, display) {
     for (let row of document.querySelectorAll(selector)) {
         row.style.display = display;
@@ -77,6 +91,9 @@ function hideRows() {
     }
     .no-cell {
         background-color: rgba(255, 0, 0, 0.4);
+    }
+    .no-cell.parse-only {
+        background-color: rgba(255, 0, 0, 0.2);
     }
     #topbox {
         display: flex;
@@ -150,6 +167,9 @@ function hideRows() {
             <li> <span style="background-color:rgba(0, 255, 0, 0.2)"></span> Only implemented in prefixed form</li>
             <li> <span style="background-color:rgba(0, 255, 0, 0.4)"></span> Exists in unprefixed form</li>
             <li> <span style="background-color: rgba(255, 0, 0, 0.4)"></span> Unimplemented</li>
+            <li> <span style="background-color: rgba(255, 0, 0, 0.2)"></span> Only parse code and tests implemented (no layout or stylo glue)</li>
+            <li> <code><a href="#">(b)</a></code> Bug filed at link</li>
+            <li> <code><a href="#">(a)</a></code> Assigned bug filed at link</li>
         </ul>
     </div>
     <table>
@@ -221,7 +241,7 @@ Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/T
 
 
         row.appendChild(name_cell);
-        function addCell(set, prop, classname) {
+        function addCell(set, prop, classname, bugmap, parseset) {
             let has = false;
             let unprefixed = false;
             let moz = false;
@@ -241,6 +261,19 @@ Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/T
             let cell = document.createElement('td');
             cell.innerHTML = has?"yes":"no";
             cell.className = has?"yes-cell":"no-cell";
+
+            if (parseset && parseset.has(prop)) {
+                cell.className += " parse-only";
+            }
+
+            if (bugmap && !has && prop in bugmap) {
+                let text = "(b)";
+                if (bugmap[prop][1]) {
+                    text = "(a)";
+                }
+                cell.innerHTML += ` <a href='${bugmap[prop][0]}'>${text}</a>`;
+            }
+
             if (webkit) {
                 cell.className += " webkit-prefixed";
             }
@@ -256,8 +289,8 @@ Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/T
             row.appendChild(cell);
         }
 
-        addCell(STYLO, prop, "in-stylo");
-        addCell(SERVO, prop, "in-servo");
+        addCell(STYLO, prop, "in-stylo", STYLO_BUGS, PARSE_PROPS);
+        addCell(SERVO, prop, "in-servo", SERVO_BUGS, PARSE_PROPS);
         addCell(FIREFOX, prop, "in-firefox");
         addCell(CHROME, prop, "in-chrome");
 
