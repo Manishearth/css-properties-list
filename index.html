@@ -81,6 +81,35 @@ function hideRows() {
                [...document.getElementsByClassName('property-row')].filter((x) => x.style.display != "none").length,
                [...document.querySelectorAll('.property-row.used-in-alexa')].filter((x) => x.style.display != "none").length);
 }
+
+function mkURI() {
+    let boxes = ['stylo', 'servo', 'firefox', 'chrome', 'mdn', 'alexa'];
+    let selections = document.getElementById('selections');
+    query = "";
+    for (let box of boxes) {
+        if (selections[box].type == "checkbox") {
+            let checked = selections[box].checked || "false";
+            query += `${box}=${checked}&`
+        } else {
+            query += `${box}=${selections[box].value}&`
+        }
+    }
+    document.location.search = query.slice(0, -1);
+}
+function setFromURI() {
+    let selections = document.getElementById('selections');
+    let params = (new URL(document.location)).searchParams;
+    for (kv of params) {
+        if (kv[1] == 'false') {
+            selections[kv[0]].checked = false;
+        } else if (kv[1] == 'true') {
+            selections[kv[0]].checked = true;
+        } else {
+           selections[kv[0]].value = kv[1];
+        }
+    }
+    hideRows();
+}
 </script>
 <style type="text/css">
     .yes-cell {
@@ -158,7 +187,8 @@ function hideRows() {
         <label for="mdn">Hide properties without MDN pages</label><input type="checkbox" name="mdn" checked id="mdn">
         <br>
         <label for="alexa">Hide properties not used in Alexa top 500</label><input type="checkbox" name="alexa" id="alexa">
-        
+        <br><br>
+        <a href="javascript:void(0)" onclick="mkURI()">Link with options set</a>
     </form>
     <div>
             Key:<ul id=key>
@@ -350,6 +380,8 @@ Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/T
     setNumbersFor('firefox-but-not-servo', '.in-firefox:not(.in-servo)');
     setNumbersFor('firefox-but-not-stylo', '.in-firefox:not(.in-stylo)');
     hideRows();
+
+    setFromURI();
 </script>
 </body>
 </html>
