@@ -116,16 +116,16 @@ function setFromURI() {
 }
 </script>
 <style type="text/css">
-    .yes-cell {
+    td.yes-cell {
         background-color: rgba(0, 255, 0, 0.2);
     }
-    .yes-cell.unprefixed {
+    td.yes-cell.unprefixed {
         background-color: rgba(0, 255, 0, 0.5);
     }
-    .no-cell {
+    td.no-cell {
         background-color: rgba(255, 0, 0, 0.4);
     }
-    .no-cell.parse-only {
+    td.no-cell.parse-only {
         background-color: rgba(255, 0, 0, 0.2);
     }
     #topbox {
@@ -133,19 +133,19 @@ function setFromURI() {
         justify-content: space-between;
     }
 
-    .webkit-prefixed {
+    td.webkit-prefixed {
         background-image: linear-gradient(#498AF4, #498AF4);
         background-size: 10px 10px;
         background-position: top right;
         background-repeat: no-repeat;
     }
-    .moz-prefixed {
+    td.moz-prefixed {
         background-image: linear-gradient(#FCA604, #FCA604);
         background-size: 10px 10px;
         background-position: bottom right;
         background-repeat: no-repeat;
     }
-    .moz-prefixed.webkit-prefixed {
+    td.moz-prefixed.webkit-prefixed {
         background-image: linear-gradient(#498AF4, #498AF4),linear-gradient(#FCA604, #FCA604);
         background-size: 10px 10px;
         background-position: top right,bottom right;
@@ -218,6 +218,7 @@ function setFromURI() {
             <tr id="servo-but-not-stylo"><td>Servo but not Stylo</td><td></td><td></td></tr>
             <tr id="firefox-but-not-stylo"><td>Firefox but not Stylo</td><td></td><td></td></tr>
             <tr id="firefox-but-not-servo"><td>Firefox but not Servo</td><td></td><td></td></tr>
+            <tr id="parse-only-servo"><td>Only parsing code in Servo</td><td></td><td></td></tr>
             <tr id="currently-visible"><td>Currently visible</td><td></td><td></td></tr>
         </tbody>
     </table>
@@ -298,6 +299,7 @@ Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/T
 
             if (parseset && parseset.has(prop)) {
                 cell.className += " parse-only";
+                row.className += " parse-only";
             }
 
             if (bugmap && !has && prop in bugmap) {
@@ -383,6 +385,7 @@ Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/T
     setNumbersFor('servo-but-not-stylo', '.in-servo:not(.in-stylo)');
     setNumbersFor('firefox-but-not-servo', '.in-firefox:not(.in-servo)');
     setNumbersFor('firefox-but-not-stylo', '.in-firefox:not(.in-stylo)');
+    setNumbersFor('parse-only-servo', '.parse-only');
     hideRows();
 
     setFromURI();
