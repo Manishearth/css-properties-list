@@ -31,11 +31,9 @@ const INITIAL_PROPS = new Set([...FIREFOX, ...CHROME, ...Object.getOwnPropertyNa
 const SERVO_BUGS = {
     "text-stroke": ["https://github.com/servo/servo/issues/13849", true],
     "text-emphasis-position": ["https://github.com/servo/servo/issues/13850", false],
-    "font-feature-settings": ["https://github.com/servo/servo/issues/13852", true],
     "text-emphasis-style": ["https://github.com/servo/servo/issues/13853", true],
     "scroll-snap-points-x": ["https://github.com/servo/servo/issues/13871", false],
     "scroll-snap-points-y": ["https://github.com/servo/servo/issues/13871", false],
-    "font-language-override": ["https://github.com/servo/servo/issues/13874", false],
     "font-size-adjust": ["https://github.com/servo/servo/issues/13875", false],
     "font-synthesis": ["https://github.com/servo/servo/issues/13876", true],
     "image-orientation": ["https://github.com/servo/servo/issues/13877", false],
@@ -45,7 +43,7 @@ const STYLO_BUGS = Object.assign({
     "column-fill": ["https://github.com/servo/servo/issues/13871", true],
 }, SERVO_BUGS);
 
-const PARSE_PROPS = new Set([]);
+const PARSE_PROPS = new Set(["font-feature-settings", "font-language-override"]);
 function displaySelector(selector, display) {
     for (let row of document.querySelectorAll(selector)) {
         row.style.display = display;
