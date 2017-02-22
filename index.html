@@ -121,6 +121,10 @@ function setFromURI() {
     .property-row td:nth-child(7) code {
         overflow-x: scroll;
     }
+
+    tr:target {
+        background: orange;
+    }
 </style>
 </head>
 <body>
@@ -199,6 +203,7 @@ Please add missing syntax to <a href="https://developer.mozilla.org/en-US/docs/T
 
     for (prop of PROPS) {
         let row = document.createElement('tr');
+        row.id = "prop-" + prop
         let value = VALUES[prop] || VALUES["-moz-"+prop] || VALUES["-webkit-"+prop] || {"url": "", "syntax": ""};
         row.className = "property-row";
         if (prop in ALEXA_COUNT) {
